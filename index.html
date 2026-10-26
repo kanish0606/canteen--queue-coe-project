@@ -1,197 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Smart Canteen Queue</title>
-
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Canteen Queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <!-- Navigation Bar -->
-
-    <header>
-
-        <div class="logo">
-            🍴 Smart Canteen
-        </div>
-
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#queue">Queue</a>
-        </nav>
-
-    </header>
-
-
-    <!-- Home -->
-
-    <section class="hero" id="home">
-
-        <div>
-
-            <h1>
-                Smart Canteen Queue
-            </h1>
-
-            <p>
-                Check the queue before you reach the canteen.
-            </p>
-
-            <button onclick="goToQueue()">
-                Check Queue
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- Queue Section -->
-
-    <section class="queue-section" id="queue">
-
-        <h2>
-            Current Queue Status
-        </h2>
-
-
-        <div class="cards">
-
-
-            <!-- Queue Count -->
-
-            <div class="card">
-
-                <div class="icon">
-                    👥
-                </div>
-
-                <h3>
-                    People in Queue
-                </h3>
-
-                <p id="queueCount">
-                    0
-                </p>
-
-            </div>
-
-
-            <!-- Waiting Time -->
-
-            <div class="card">
-
-                <div class="icon">
-                    ⏱️
-                </div>
-
-                <h3>
-                    Estimated Wait
-                </h3>
-
-                <p>
-                    <span id="waitTime">0</span> min
-                </p>
-
-            </div>
-
-
-            <!-- Crowd Status -->
-
-            <div class="card">
-
-                <div class="icon">
-                    🟢
-                </div>
-
-                <h3>
-                    Crowd Status
-                </h3>
-
-                <p id="crowdStatus">
-                    Low
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- Join Queue -->
-
-        <div class="join-box">
-
-            <h2>
-                Join the Queue
-            </h2>
-
-            <p>
-                Get your digital token and track your position.
-            </p>
-
-            <button onclick="joinQueue()">
-                🎫 Join Queue
-            </button>
-
-            <div id="studentStatus"></div>
-
-        </div>
-
-
-        <!-- Queue List -->
-
-        <div class="queue-list">
-
-            <h2>
-                Queue List
-            </h2>
-
-            <div id="queueList"></div>
-
-        </div>
-
-    </section>
-
-
-    <!-- Staff Panel -->
-
-    <section class="staff">
-
-        <h2>
-            Canteen Staff
-        </h2>
-
-        <p>
-            Manage the current queue.
-        </p>
-
-        <button onclick="serveNext()">
-            Serve Next
-        </button>
-
-        <button onclick="resetQueue()">
-            Reset Queue
-        </button>
-
-    </section>
-
-
-    <footer>
-
-        <p>
-            Smart Canteen Queue | Project Better Tomorrow
-        </p>
-
-    </footer>
-
-
-    <script src="script.js"></script>
-
+<header>
+  <div class="logo">🍴 Smart Canteen Management System</div>
+  <nav>
+    <a href="#home">Live board</a>
+    <a href="#queue">Queue</a>
+    <a href="#staff">Staff</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-text">
+    <h1>Know the wait before you walk over.</h1>
+    <p>Check the crowd, grab a digital token, and get an alert when your turn is close.</p>
+
+    <div class="join" id="joinBox">
+      <label for="nameInput">Your name (optional)</label>
+      <div class="row">
+        <input id="nameInput" maxlength="20" placeholder="e.g. Kanish" autocomplete="off">
+        <button id="joinBtn" onclick="joinQueue()">Get my token</button>
+      </div>
+    </div>
+
+    <div class="ticket" id="myTicket" hidden>
+      <div class="ticket-main">
+        <span class="small">Your token</span>
+        <strong id="tkNum">A-000</strong>
+        <span id="tkName" class="small"></span>
+      </div>
+      <div class="ticket-info">
+        <div><span class="small">Position</span><b id="tkPos">1</b></div>
+        <div><span class="small">Est. wait</span><b><span id="tkWait">0</span> min</b></div>
+        <button class="ghost" onclick="leaveQueue()">Leave queue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="board" aria-live="polite">
+    <span class="small">Now serving</span>
+    <div class="board-num" id="nowServing">—</div>
+    <div class="board-stats">
+      <div><b id="queueCount">0</b><span>waiting</span></div>
+      <div><b><span id="waitTime">0</span> min</b><span>est. wait</span></div>
+      <div><b id="crowdStatus" class="crowd" data-level="low">Low</b><span>crowd</span></div>
+    </div>
+    <p class="note" id="avgInfo"></p>
+    <p class="note" id="pauseNote" hidden>Joining is paused by canteen staff.</p>
+  </div>
+</section>
+
+<section class="queue-section" id="queue">
+  <h2>Who's in line</h2>
+  <div id="queueList" class="list"></div>
+</section>
+
+<section class="staff" id="staff">
+  <h2>Canteen staff</h2>
+
+  <div id="pinBox" class="pin">
+    <p>Enter the staff PIN to manage the queue.</p>
+    <div class="row">
+      <input id="pinInput" type="password" inputmode="numeric" maxlength="8" placeholder="PIN">
+      <button onclick="staffLogin()">Unlock</button>
+    </div>
+  </div>
+
+  <div id="staffPanel" hidden>
+    <div class="controls">
+      <button onclick="serveNext()">Serve next</button>
+      <button class="alt" id="pauseBtn" onclick="togglePause()">Pause joining</button>
+      <button class="alt" onclick="resetQueue()">Reset queue</button>
+      <button class="ghost light" onclick="staffLogout()">Lock</button>
+    </div>
+
+    <div class="counters">
+      <span>Open counters</span>
+      <button class="step" onclick="setCounters(-1)" aria-label="Fewer counters">−</button>
+      <b id="cntVal">1</b>
+      <button class="step" onclick="setCounters(1)" aria-label="More counters">+</button>
+    </div>
+
+    <div class="stats">
+      <div><b id="sServed">0</b><span>served</span></div>
+      <div><b id="sSvc">3.0</b><span>min / person</span></div>
+      <div><b id="sWait">0</b><span>avg min waited</span></div>
+      <div><b id="sPeak">0</b><span>peak queue</span></div>
+    </div>
+
+    <h3>Recently served</h3>
+    <div id="recentList" class="recent"></div>
+  </div>
+</section>
+</main>
+
+<footer>Smart Canteen Queue · Project Better Tomorrow </footer>
+<div id="toasts" aria-live="assertive"></div>
+
+<script src="script.js"></script>
 </body>
-
 </html>

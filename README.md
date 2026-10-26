@@ -130,7 +130,3 @@ smart-canteen-queue/
 
 ---
 
-## Author
-
-**Kanish**, Electronics and Communication Engineering, Rathinam Technical Campus
-Project Better Tomorrow
